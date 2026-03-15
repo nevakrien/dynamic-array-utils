@@ -45,11 +45,11 @@ typedef struct {
 
 #define POP(arr) ((arr).data[(ASSERT(arr.len),--(arr).len)])
 #define PEEK(arr) ((arr).data[(ASSERT(arr.len),(arr).len-1)])
-#define AT(arr,i) ((arr).data[(ASSERT(i<arr.len),i)])
+#define AT(arr,i) ((arr).data[(ASSERT(((size_t)i)<((size_t)arr.len)),i)])
 #define REMOVE_UNORDERED(arr,i) (AT(arr,i)=PEEK(arr),arr.data[--(arr).len])
 
 #define ENSURE_CAP(arr) \
-((arr).len >= (arr).cap ? ( \
+((size_t)(arr).len >= (size_t)(arr).cap ? ( \
     (arr).cap = (arr).cap ? (arr).cap * 2 : 8, \
     (arr).data = realloc((arr).data, (arr).cap * sizeof(*(arr).data)), \
     assert((arr).data != NULL && "went OOM") \
