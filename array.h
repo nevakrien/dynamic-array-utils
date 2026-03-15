@@ -46,19 +46,20 @@ typedef struct {
 #define POP(arr) ((arr).data[(ASSERT(arr.len),--(arr).len)])
 #define PEEK(arr) ((arr).data[(ASSERT(arr.len),(arr).len-1)])
 #define AT(arr,i) ((arr).data[(ASSERT(((size_t)i)<((size_t)arr.len)),i)])
-#define REMOVE_UNORDERED(arr,i) (AT(arr,i)=PEEK(arr),arr.data[--(arr).len])
+#define REMOVE_UNORDERED(arr,i) (AT(arr,i)=PEEK(arr),(arr).data[--(arr).len])
 
 #define ENSURE_CAP(arr) \
 ((size_t)(arr).len >= (size_t)(arr).cap ? ( \
     (arr).cap = (arr).cap ? (arr).cap * 2 : 8, \
     (arr).data = realloc((arr).data, (arr).cap * sizeof(*(arr).data)), \
-    assert((arr).data != NULL && "went OOM") \
-) : (void)0, \
-(arr))
+    assert((arr).data != NULL && "went OOM"), \
+    (arr) \
+) : (arr))
 
-#define PUSH(arr,x) (ENSURE_CAP(arr).data[(arr).len++] = (x))
+#define PUSH(arr,x) \
+(ENSURE_CAP(arr), (arr).data[(arr).len] = (x), (arr).len++)
 
-#define SET_FROM_CSTR(tgt,cstr) ((tgt).data=cstr,(tgt).len=strlen(cstr),tgt)
+#define SET_FROM_CSTR(tgt,cstr) ((tgt).data=cstr,(tgt).len=strlen(cstr))
 
 #endif // ARRAY_H
 
