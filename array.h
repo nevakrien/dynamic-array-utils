@@ -48,13 +48,15 @@ typedef struct {
 #define AT(arr,i) ((arr).data[(ASSERT(i<arr.len),i)])
 #define REMOVE_UNORDERED(arr,i) (AT(arr,i)=PEEK(arr),arr.data[--(arr).len])
 
-#define PUSH(arr, x) \
+#define ENSURE_CAP(arr) \
 ((arr).len >= (arr).cap ? ( \
     (arr).cap = (arr).cap ? (arr).cap * 2 : 8, \
     (arr).data = realloc((arr).data, (arr).cap * sizeof(*(arr).data)), \
     assert((arr).data != NULL && "went OOM") \
 ) : (void)0, \
-(arr).data[(arr).len++] = (x))
+(arr))
+
+#define PUSH(arr,x) (ENSURE_CAP(arr).data[(arr).len++] = (x))
 
 #define SET_FROM_CSTR(tgt,cstr) ((tgt).data=cstr,(tgt).len=strlen(cstr),tgt)
 
